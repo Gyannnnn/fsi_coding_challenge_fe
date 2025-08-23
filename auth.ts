@@ -1,0 +1,83 @@
+import NextAuth from "next-auth";
+import { ZodError } from "zod";
+import Credentials from "next-auth/providers/credentials";
+import { signInSchema } from "./lib/zod";
+import axios from "axios";
+// Your own logic for dealing with plaintext password strings; be careful!
+
+import { saltAndHashPassword } from "./utils/saltAndHashPw";
+// import { getUserFromDb } from "@/utils/db"
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    Credentials({
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      credentials: {
+        email: {},
+        password: {},
+      },
+      authorize: async (credentials) => {
+        try {
+          // Validate input
+          if (!credentials?.email || !credentials?.password) return null;
+          const { email, password } = await signInSchema.parseAsync(
+            credentials
+          );
+
+          // Call your backend API
+          const res = await axios.post(
+            "http://localhost:8000/api/v1/auth/signin",
+            {
+              userEmail: email,
+              userPassword: password,
+            }
+          );
+
+          // If no user returned, fail login
+          const { user, token } = res.data;
+
+          if (!user) return null;
+
+          return {
+            id: user.id,
+            email: user.userEmail, // <--- fix this
+            name: user.userName, // optional
+            role: user.role,
+            accessToken: token, // <--- fix this
+          };
+        } catch (error: any) {
+          console.error(
+            "Authorize error:",
+            error.response?.data || error.message || error
+          );
+          return null; // Always return null on failure
+        }
+      },
+    }),
+  ],
+  session: { strategy: "jwt" },
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = (user as any).role;
+        token.accessToken = (user as any).accessToken;
+        token.name = (user as any).name;
+        token.email = (user as any).email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      (session.user as any).role = token.role;
+      (session.user as any).name = token.name;
+      (session.user as any).email = token.email;
+      (session as any).accessToken = token.accessToken;
+      return session;
+    },
+  },
+
+  secret: process.env.NEXTAUTH_SECRET,
+});
+
+export { handlers as GET, handlers as POST };
