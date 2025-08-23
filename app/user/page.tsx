@@ -8,7 +8,7 @@ export default async function Page() {
     return <h1>Please login first</h1>;
   }
 
-  const token = (session as any).accessToken;
+  const token = (session).accessToken;
 
   try {
     const res = await axios.get("http://localhost:8000/api/v1/user/hello", {

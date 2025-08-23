@@ -3,16 +3,15 @@ import { ZodError } from "zod";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
 import axios from "axios";
-// Your own logic for dealing with plaintext password strings; be careful!
+
 
 import { saltAndHashPassword } from "./utils/saltAndHashPw";
-// import { getUserFromDb } from "@/utils/db"
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
+    
       credentials: {
         email: {},
         password: {},
@@ -25,7 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             credentials
           );
 
-          // Call your backend API
+          // Call  backend API
           const res = await axios.post(
             "http://localhost:8000/api/v1/auth/signin",
             {
@@ -41,10 +40,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           return {
             id: user.id,
-            email: user.userEmail, // <--- fix this
+            email: user.userEmail, 
             name: user.userName, // optional
             role: user.role,
-            accessToken: token, // <--- fix this
+            accessToken: token, 
           };
         } catch (error: any) {
           console.error(
