@@ -57,7 +57,7 @@ export default function Page() {
 
     try {
       Setloading(true);
-      await axios.post("http://localhost:8000/api/v1/auth/signup", {
+      await axios.post("https://fsi-coding-challenge-api.vercel.app/api/v1/auth/signup", {
         userName: name,
         userEmail: email,
         userPassword: password,

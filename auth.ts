@@ -1,11 +1,10 @@
 import NextAuth from "next-auth";
-import { ZodError } from "zod";
+
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
 import axios from "axios";
 
 
-import { saltAndHashPassword } from "./utils/saltAndHashPw";
 
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -26,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           // Call  backend API
           const res = await axios.post(
-            "http://localhost:8000/api/v1/auth/signin",
+            "https://fsi-coding-challenge-api.vercel.app/api/v1/auth/signin",
             {
               userEmail: email,
               userPassword: password,

@@ -11,7 +11,7 @@ export default async function Page() {
   const token = (session).accessToken;
 
   try {
-    const res = await axios.get("http://localhost:8000/api/v1/user/hello", {
+    const res = await axios.get("https://fsi-coding-challenge-api.vercel.app/api/v1/user/hello", {
       headers: { Authorization: `Bearer ${token}` },
     });
     console.log(res.data)
