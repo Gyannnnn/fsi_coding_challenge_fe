@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+html,body{
+  overflow-x: hidden;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -119,5 +122,14 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .logo{
+    @apply text-3xl text-background font-bold
+  }
+  .center{
+    @apply flex justify-center items-center
+  }
+  .container{
+    @apply  mt-16 bg-yellow-50
   }
 }
