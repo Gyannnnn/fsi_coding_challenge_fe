@@ -23,16 +23,17 @@ export default async function Page() {
         <p>User: {res.data.user?.name || "N/A"}</p>
 
         <div>
-          <h1>Welcome, {(session.user as any).name}</h1>
-          <p>Role: {(session.user as any).role}</p>
+          <h1>Welcome, {(session.user).name}</h1>
+          <p>Role: {(session.user).role}</p>
           <p>JWT Token: {token}</p>
         </div>
       </div>
     );
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error
     return (
       <h1>
-        {error.message} {token}
+        {err.message} {token}
       </h1>
     );
   }
