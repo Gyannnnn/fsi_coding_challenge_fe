@@ -38,6 +38,7 @@ export default function AddUser() {
     const role = formData.get("role");
 
 
+    const loadingId = toast.loading("Creating user...");
     try {
       const res = await axios.post(
         "https://fsi-coding-challenge-api.vercel.app/api/v1/user/adduser",
@@ -54,10 +55,12 @@ export default function AddUser() {
           },
         }
       );
-      toast.success("Successfully toasted!");
+      toast.dismiss(loadingId);
+      toast.success("User created successfully");
     } catch (error) {
       const err = error as Error;
-      toast.error("Failed to create user" + err.message);
+      toast.dismiss(loadingId);
+      toast.error("Failed to create user: " + err.message);
     }
   };
 
@@ -120,7 +123,7 @@ export default function AddUser() {
           </form>
         </DialogHeader>
       </DialogContent>
-      <Toaster />
+      <Toaster position="top-right" />
     </Dialog>
   );
 }

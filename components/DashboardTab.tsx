@@ -72,44 +72,46 @@ export default async function DashboardTab() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Users Tab */}
-        <TabsContent value="account" className="flex flex-col gap-3 mt-4">
-          <AddUser />
-
-          {userData.map((user) => (
-            <Link key={user.id} href={`/user/${user.id}`}>
-              <Card className="flex items-center justify-between px-4 py-3 hover:shadow-md transition rounded-xl">
-                <div className="flex flex-col">
-                  <h1 className="font-medium text-gray-800">{user.userName}</h1>
-                  <p className="text-sm text-gray-500">{user.userEmail}</p>
-                  <p className="text-xs text-gray-400">📍 {user.userAddress}</p>
-                </div>
-                <Badge variant="secondary">Admin</Badge>
-              </Card>
-            </Link>
-          ))}
+       
+        <TabsContent value="account" className="mt-4">
+          <div className="mb-3"><AddUser /></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {userData.map((user) => (
+              <Link key={user.id} href={`/user/${user.id}`}>
+                <Card className="px-5 py-4 hover:shadow-md transition rounded-2xl flex items-start justify-between">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{user.userName}</h3>
+                    <p className="text-sm text-gray-600">{user.userEmail}</p>
+                    <p className="text-xs text-gray-500">📍 {user.userAddress}</p>
+                  </div>
+                  <Badge variant="secondary" className="shrink-0 capitalize">{user.userRole}</Badge>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </TabsContent>
 
-        {/* Stores Tab */}
-        <TabsContent value="stores" className="flex flex-col gap-3 mt-4">
-          <AddStore />
-
-          {storeData.map((store) => (
-            <Link key={store.id} href={`/store/${store.id}`}>
-              <Card className="flex items-center justify-between px-4 py-3 hover:shadow-md transition rounded-xl">
-                <div className="flex flex-col">
-                  <h1 className="font-medium text-gray-800">
-                    {store.storeName}
-                  </h1>
-                  <p className="text-sm text-gray-500">{store.storeAddress}</p>
-                  <p className="text-xs text-yellow-600">
-                    ⭐ {store.averageRating.toFixed(1)}
-                  </p>
-                </div>
-                <Badge variant="secondary">Admin</Badge>
-              </Card>
-            </Link>
-          ))}
+       
+        <TabsContent value="stores" className="mt-4">
+          <div className="mb-3"><AddStore /></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {storeData.map((store) => (
+              <Link key={store.id} href={`/store/${store.id}`}>
+                <Card className="px-5 py-4 hover:shadow-md transition rounded-2xl flex items-start justify-between">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{store.storeName}</h3>
+                    <p className="text-sm text-gray-600">{store.storeAddress}</p>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span className="text-yellow-600">⭐ {store.averageRating.toFixed(1)}</span>
+                      <span className="h-1 w-1 rounded-full bg-gray-300" />
+                      <span>Owner: {store.storeOwner?.userName}</span>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="shrink-0">Store</Badge>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
     );

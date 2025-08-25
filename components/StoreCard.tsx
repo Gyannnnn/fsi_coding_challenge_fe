@@ -36,7 +36,7 @@ export default async function StoreCard({ storeData }: { storeData: Store[] }) {
             <p>Updated: {new Date(store.updatedAt).toLocaleDateString()}</p>
           </div>
           {
-            user?.role === "systemAdmin" ? (<div className="absolute top-2 right-2"><Link href={`/store/${store.id}`}>View Store</Link></div>):""
+            user?.role === "systemAdmin" ? (<div className="absolute top-2 right-2 max-sm:text-sm"><Link href={`/store/${store.id}`}>View Store</Link></div>):""
           }
         </Card>
       ))}

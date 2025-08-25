@@ -28,6 +28,7 @@ export default function AddStore() {
     const storeName = formData.get("storeName");
     const address = formData.get("address");
 
+    const loadingId = toast.loading("Creating store...");
     try {
       await axios.post(
         "https://fsi-coding-challenge-api.vercel.app/api/v1/store/create",
@@ -43,11 +44,13 @@ export default function AddStore() {
         }
       );
 
-      toast.success("Store created succssfully");
+      toast.dismiss(loadingId);
+      toast.success("Store created successfully");
     } catch (error) {
       const err = error as Error;
 
-      toast.error("Failed to create store : " + err.message);
+      toast.dismiss(loadingId);
+      toast.error("Failed to create store: " + err.message);
     }
   };
 
@@ -82,7 +85,7 @@ export default function AddStore() {
           </form>
         </DialogHeader>
       </DialogContent>
-      <Toaster />
+      <Toaster position="top-right" />
     </Dialog>
   );
 }

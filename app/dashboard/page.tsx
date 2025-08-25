@@ -31,13 +31,13 @@ export default async function page() {
   const data = res.data;
   
   return (
-    <div className="h-screen w-screen bg-yellow-50 mt-16 pt-2 flex flex-col justify-start items-center gap-4">
-      <Card className="w-1/2 h-56 p-6 flex flex-col justify-center bg-white shadow-md rounded-2xl">
+    <div className="min-h-screen w-full bg-yellow-50 mt-20 px-4 py-4 flex flex-col items-center gap-6">
+      <Card className="w-full max-w-4xl h-auto p-6 flex flex-col justify-center bg-white shadow-md rounded-2xl">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           📊 Dashboard Stats
         </h2>
 
-        <div className="grid grid-cols-3 gap-4 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
           <div className="p-4 rounded-xl bg-gray-50 shadow-sm">
             <h3 className="text-2xl font-bold text-blue-600">
               {data.usersCount}
@@ -61,7 +61,7 @@ export default async function page() {
         </div>
       </Card>
 
-      <Card className="w-1/2 min-h-[50vh]">
+      <Card className="w-full max-w-4xl min-h-[50vh]">
         <DashboardTab />
       </Card>
     </div>

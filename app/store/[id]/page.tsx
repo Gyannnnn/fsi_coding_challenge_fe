@@ -72,7 +72,7 @@ export default async function page({
     const ratingsData = res.data.ratings;
 
     return (
-      <div className="h-screen w-screen bg-yellow-50 flex flex-col gap-4 justify-start items-center mt-16 pt-2">
+      <div className="h-screen w-screen  flex flex-col gap-4 justify-start items-center mt-16 pt-2">
         <Card className="w-full sm:w-1/2 bg-primary-foreground text-black h-56 rounded-2xl shadow-lg p-6">
           <div className="flex flex-col gap-3 justify-center items-center">
             {/* Store Name */}
@@ -112,9 +112,9 @@ export default async function page({
             </div>
           ) : (
             ratingsData.map((data, index) => (
-              <Link href={`/user/${data.user.id}`}>
+              <Link key={data.id || index} href={`/user/${data.user.id}`}>
                 <Card
-                  key={index}
+                  key={data.id || index}
                   className="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
                 >
                   <div className="flex justify-between items-center mb-2">
