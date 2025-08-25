@@ -1,8 +1,10 @@
 "use client";
 
 import { signIn as nextAuthSignIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function SignIn() {
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -16,6 +18,8 @@ export function SignIn() {
     if (res?.error) {
       console.error(res.error);
     } else {
+      router.refresh();
+      router.push("/");
     }
   };
 

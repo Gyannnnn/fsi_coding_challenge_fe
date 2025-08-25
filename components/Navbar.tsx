@@ -19,7 +19,7 @@ export default async function Navbar() {
   if (!token) {
     // User not logged in
     return (
-      <div className="h-16 w-screen bg-primary flex items-center justify-around fixed top-0 z-50]">
+      <div className="h-16 w-screen bg-primary flex items-center justify-around fixed top-0 z-50">
         <div className="logo">RatingX</div>
         <div className="text-white flex gap-2">
           <Link href={"/"}>Home</Link>
@@ -52,11 +52,34 @@ export default async function Navbar() {
     userId = decoded.userId;
   } catch (error) {
     console.error("Invalid token:", error);
-    return null; // or show a fallback UI
+    // Fallback to logged-out navbar if token can't be decoded
+    return (
+      <div className="h-16 w-screen bg-primary flex items-center justify-around fixed top-0 z-50">
+        <div className="logo">RatingX</div>
+        <div className="text-white flex gap-2">
+          <Link href={"/"}>Home</Link>
+          <Link href="/dashboard">Dashboard</Link>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Avatar className="h-12 w-12 hover:cursor-pointer">
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            
+            <DropdownMenuItem>
+             <Link href={"/signin"}>Signin</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    );
   }
 
   return (
-    <div className="h-16 w-screen bg-primary flex items-center justify-around fixed top-0">
+    <div className="h-16 w-screen bg-primary flex items-center justify-around fixed top-0 z-50">
       <div className="logo">RatingX</div>
       <div className="text-white flex gap-2">
         <Link href={"/"}>Home</Link>
