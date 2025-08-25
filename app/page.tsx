@@ -8,12 +8,14 @@ import USerCard from "@/components/USerCard";
 export default async function page() {
   const session = await auth();
   const email = session?.user?.email;
-  if (!session) return <div>Not authenticated</div>;
+  if (!session) {
+    return <div className="h-screen w-screen center">Not authenticated</div>;
+  }
   try {
     const res = await axios.get(
       "https://fsi-coding-challenge-api.vercel.app/api/v1/store/all-stores"
     );
-    console.log(res.data.stores);
+
     const data = res.data.stores;
 
     return (
@@ -28,6 +30,10 @@ export default async function page() {
     );
   } catch (error) {
     const err = error as Error;
-    return <h1>{err.message} </h1>;
+    return (
+      <div className="h-screen w-screen center">
+        <h1>{err.message} </h1>
+      </div>
+    );
   }
 }

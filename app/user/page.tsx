@@ -14,8 +14,8 @@ export default async function Page() {
     const res = await axios.get("https://fsi-coding-challenge-api.vercel.app/api/v1/user/hello", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(res.data)
-    // res.data is an object, so we render its properties
+
+
     return (
       <div>
         <h2>API Response:</h2>

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import axios from "axios";
+import { Divide } from "lucide-react";
 import Link from "next/link";
 
 interface StoreOwner {
@@ -69,7 +70,6 @@ export default async function page({
 
     const data = res.data.store;
     const ratingsData = res.data.ratings;
-    console.log(ratingsData);
 
     return (
       <div className="h-screen w-screen bg-yellow-50 flex flex-col gap-4 justify-start items-center mt-16 pt-2">
@@ -106,25 +106,33 @@ export default async function page({
         <h1>Ratings</h1>
 
         <Card className="w-full sm:w-1/2 bg-white rounded-2xl shadow-md p-4 flex flex-col gap-4">
-          {ratingsData.map((data, index) => (
-            <Card
-              key={index}
-              className="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  {data.user.userName}
-                </h2>
-                <span className="text-yellow-500 font-medium">
-                  ⭐ {data.rating.toFixed(1)}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600">{data.user.userEmail}</p>
-              <p className="text-sm text-gray-500 capitalize">
-                {data.user.userRole}
-              </p>
-            </Card>
-          ))}
+          {ratingsData.length === 0 ? (
+            <div className="center">
+              <h1>No Ratings found !</h1>
+            </div>
+          ) : (
+            ratingsData.map((data, index) => (
+              <Link href={`/user/${data.user.id}`}>
+                <Card
+                  key={index}
+                  className="bg-gray-50 rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {data.user.userName}
+                    </h2>
+                    <span className="text-yellow-500 font-medium">
+                      ⭐ {data.rating.toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600">{data.user.userEmail}</p>
+                  <p className="text-sm text-gray-500 capitalize">
+                    {data.user.userRole}
+                  </p>
+                </Card>
+              </Link>
+            ))
+          )}
         </Card>
       </div>
     );

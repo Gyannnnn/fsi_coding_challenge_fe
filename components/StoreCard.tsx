@@ -19,7 +19,7 @@ export default async function StoreCard({ storeData }: { storeData: Store[] }) {
   const user = session?.user
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 ">
       {storeData.map((store) => (
         <Card key={store.id} className="w-full bg-white shadow-md p-4 rounded-lg relative">
           <h2 className="text-xl font-bold mb-2">{store.storeName}</h2>
@@ -36,7 +36,7 @@ export default async function StoreCard({ storeData }: { storeData: Store[] }) {
             <p>Updated: {new Date(store.updatedAt).toLocaleDateString()}</p>
           </div>
           {
-            user?.role === "systemAdmin" ? (<div className="absolute top-2 right-2"><Link href={`/store/${store.id}`}>View ratings</Link></div>):""
+            user?.role === "systemAdmin" ? (<div className="absolute top-2 right-2"><Link href={`/store/${store.id}`}>View Store</Link></div>):""
           }
         </Card>
       ))}

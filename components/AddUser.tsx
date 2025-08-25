@@ -1,7 +1,8 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,20 +19,60 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 export default function AddUser() {
+  const { data: session } = useSession();
+  const token = session?.accessToken;
+
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const address = formData.get("address");
+    const password = formData.get("password");
+    const role = formData.get("role");
+
+
+    try {
+      const res = await axios.post(
+        "https://fsi-coding-challenge-api.vercel.app/api/v1/user/adduser",
+        {
+          userName: name,
+          userEmail: email,
+          userPassword: password,
+          userAddress: address,
+          role: role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Successfully toasted!");
+    } catch (error) {
+      const err = error as Error;
+      toast.error("Failed to create user" + err.message);
+    }
+  };
+
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Add a new user</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a New User</DialogTitle>
-          <form className="w-full" action="">
+          <form className="w-full" onSubmit={submitHandler}>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">name</Label>
-              <Input required name="name" placeholder="Enter user name"></Input>
+              <Label htmlFor="name">Name</Label>
+              <Input required name="name" placeholder="Enter user name" />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
@@ -40,7 +81,7 @@ export default function AddUser() {
                 type="email"
                 name="email"
                 placeholder="Enter user email"
-              ></Input>
+              />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
@@ -49,20 +90,20 @@ export default function AddUser() {
                 type="password"
                 name="password"
                 placeholder="Enter user password"
-              ></Input>
+              />
             </div>
             <div>
               <Label htmlFor="address">Address</Label>
               <Input
                 required
-                type="address"
+                type="text"
                 name="address"
                 placeholder="Enter user address"
-              ></Input>
+              />
             </div>
             <div className="flex flex-col gap-2">
               <Label>User role</Label>
-              <Select>
+              <Select name="role">
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
@@ -79,6 +120,7 @@ export default function AddUser() {
           </form>
         </DialogHeader>
       </DialogContent>
+      <Toaster />
     </Dialog>
   );
 }
