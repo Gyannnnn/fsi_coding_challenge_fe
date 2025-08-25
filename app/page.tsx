@@ -3,6 +3,7 @@ import React from "react";
 import axios from "axios";
 import StoreCard from "@/components/StoreCard";
 import USerCard from "@/components/USerCard";
+import { jwtDecode } from "jwt-decode";
 
 export default async function page({
   searchParams,
@@ -11,6 +12,9 @@ export default async function page({
 }) {
   const session = await auth();
   const email = session?.user?.email;
+  const token = session?.accessToken;
+    const decoded: { userId: string } = jwtDecode(token as string);
+    const userId = decoded.userId;
   if (!session) {
     return <div className="h-screen w-screen center">Not authenticated</div>;
   }

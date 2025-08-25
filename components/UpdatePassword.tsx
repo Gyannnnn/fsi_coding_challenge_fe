@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import axios from "axios";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 interface UpdatePasswordProps {
   userId: string;
@@ -27,7 +27,7 @@ export default function UpdatePassword({ userId,token }: UpdatePasswordProps) {
 
     const currentPassword = formData.get("cpassword");
     const password = formData.get("password");
-
+    const loadingId = toast.loading("Updating password");
     try {
       await axios.put(
         "https://fsi-coding-challenge-api.vercel.app/api/v1/auth/update-password",
@@ -41,8 +41,10 @@ export default function UpdatePassword({ userId,token }: UpdatePasswordProps) {
           },
         }
       );
+      toast.dismiss(loadingId)
       toast.success("Password updated");
     } catch (error) {
+      toast.dismiss(loadingId)
       const err = error as Error;
       toast.error("Failed to update password: " + err.message);
     }
@@ -82,7 +84,9 @@ export default function UpdatePassword({ userId,token }: UpdatePasswordProps) {
             </Button>
           </form>
         </DialogHeader>
+        
       </DialogContent>
+      <Toaster/>
     </Dialog>
   );
 }

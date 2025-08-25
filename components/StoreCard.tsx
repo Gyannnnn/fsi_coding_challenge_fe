@@ -2,6 +2,8 @@ import React from "react";
 import { Card } from "./ui/card";
 import { auth } from "@/auth";
 import Link from "next/link";
+import StarRatings from "./StarRatings";
+import { jwtDecode } from "jwt-decode";
 interface Store {
   id: string;
   storeName: string;
@@ -17,6 +19,9 @@ export default async function StoreCard({ storeData }: { storeData: Store[] }) {
   if (!storeData) return <div>No stores found</div>;
   const session = await auth()
   const user = session?.user
+  const token = session?.accessToken
+   const decoded: { userId: string } = jwtDecode(token as string);
+    const userId = decoded.userId;
 
   return (
     <div className="flex flex-col gap-4 ">
@@ -30,11 +35,12 @@ export default async function StoreCard({ storeData }: { storeData: Store[] }) {
             <span>{store.averageRating.toFixed(1)} ⭐</span>
             <span className="text-gray-500">({store.ratingCount} reviews)</span>
           </div>
-
+<StarRatings token={token as string} userId={userId} storeId={store.id}/>
           <div className="text-gray-500 text-sm">
             <p>Created: {new Date(store.createdAt).toLocaleDateString()}</p>
             <p>Updated: {new Date(store.updatedAt).toLocaleDateString()}</p>
           </div>
+          
           {
             user?.role === "systemAdmin" ? (<div className="absolute top-2 right-2 max-sm:text-sm"><Link href={`/store/${store.id}`}>View Store</Link></div>):""
           }
