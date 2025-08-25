@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RatingX - Frontend
 
-## Getting Started
+A Next.js App Router frontend for RatingX, an authenticated store ratings/admin dashboard app. It integrates NextAuth (credentials) with a remote REST API and uses server components for data fetching and rendering.
 
-First, run the development server:
+## Features
+- Authentication via NextAuth Credentials with JWT sessions
+- Role-aware UI (user, storeOwner, systemAdmin)
+- Responsive UI with Tailwind and shadcn/ui
+- Store listing and details with ratings
+- Admin dashboard with analytics and data tabs
+- Profile page with password update (own profile)
+- Search stores on the home page
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tech Stack
+- Next.js (App Router, Server Components)
+- TypeScript
+- NextAuth (Credentials provider)
+- axios
+- Tailwind CSS + shadcn/ui components
+- react-hot-toast for feedback
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
+- `app/`
+  - Root layout and global styles, fixed Navbar
+  - `page.tsx`: Auth-required home with user card and store list, server-side search (`q`)
+  - `dashboard/page.tsx`: Admin-only analytics and `DashboardTab`
+  - `user/[userid]/page.tsx`: User profile card; shows UpdatePassword if viewing own profile
+  - `store/[id]/page.tsx`: Store details and ratings
+  - `(auth)/signin`, `(auth)/signup`: Auth flows (client pages)
+  - `api/auth/[...nextauth]/route.ts`: NextAuth route handlers
+- `components/`
+  - `Navbar.tsx`: Server navbar reads session; responsive, token-safe, logout
+  - `USerCard.tsx`: Greets user, shows role and store link for owners
+  - `StoreCard.tsx`: Renders list of stores
+  - `DashboardTab.tsx`: Tabs for Users/Stores, redesigned responsive cards
+  - `AddUser.tsx`, `AddStore.tsx`: Admin actions with toast UX
+  - `UpdatePassword.tsx`, `Logout.tsx`
+- `auth.ts`: NextAuth configuration (providers, callbacks, exports `auth`, `signIn`, `signOut`)
+- `lib/`, `utils/`, `types/`: helpers and types
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Authentication Flow
+- Credentials sign-in sends email/password to API `auth/signin`.
+- On success, the API returns `user` and `token`. The token is stored in the JWT and exposed on `session.accessToken`.
+- `jwt` and `session` callbacks propagate id, role, name, email, address, and `accessToken`.
+- Server components call `auth()` to read the session; token is used in API calls as `Authorization: Bearer <token>`.
+- Logout uses a server action (`signOut({ redirectTo: "/" })`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## External API
+All data is fetched from `https://fsi-coding-challenge-api.vercel.app/`:
+- Stores: list, store by id, create
+- Dashboard analytics and combined data
+- Users: add, get by id
 
-## Learn More
+## Pages Overview
+- Home `/`:
+  - Shows `USerCard` and `StoreCard` list
+  - Search field filters stores by `q` (name or address)
+  - Requires authentication
+- Dashboard `/dashboard` (admin):
+  - Stats for users, stores, ratings
+  - `DashboardTab` with redesigned Users and Stores tabs
+- Profile `/user/[userid]`:
+  - User details card; if own profile, shows `UpdatePassword`
+- Store `/store/[id]` (admin):
+  - Store details and user ratings
+- Auth: `/signin`, `/signup`
 
-To learn more about Next.js, take a look at the following resources:
+## Responsive Design
+- Navbar: fixed, `z-50`, responsive links (hidden on small, dropdown items provided)
+- Home, Dashboard, and Profile use centered max-width containers with mobile padding
+- Tabs render as responsive grids on small/large screens
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
+- Install deps: `npm install`
+- Run dev: `npm run dev`
+- Build: `npm run build`
+- Lint: `npm run lint`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment
+- Requires `NEXTAUTH_SECRET` in env (see NextAuth docs)
+- The app expects the external API to be reachable
 
-## Deploy on Vercel
+## Notes & Conventions
+- Server Components fetch with axios on the server using `auth()` token
+- Avoid decoding JWT unless token exists; fall back gracefully when invalid
+- Use shadcn/ui primitives; prefer semantic Tailwind classes
+- Avoid `any`; prefer minimal structural types where needed (e.g., search filter)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Screenshots
+Place PNG/JPG files under `public/screenshots/` and they will be served at `/screenshots/...`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For example filenames (replace with your own captures):
+
+- Home (authenticated)
+  - `public/screenshots/home.png`
+  - `public/screenshots/home-search.png`
+- Dashboard (admin)
+  - `public/screenshots/dashboard.png`
+- Profile
+  - `public/screenshots/profile.png`
+- Store Details (admin)
+  - `public/screenshots/store-details.png`
+
+Markdown references (these will display on GitHub if files exist):
+
+![Home](public/screenshots/home.png)
+![Home Search](public/screenshots/home-search.png)
+![Dashboard](public/screenshots/dashboard.png)
+![Profile](public/screenshots/profile.png)
+![Store Details](public/screenshots/store-details.png)
