@@ -50,6 +50,7 @@ export default async function page({
       }
     );
     const data = res.data;
+    console.log(res)
 
     return (
       <div className="min-h-screen w-full flex flex-col items-center bg-gray-50 mt-20 px-4 py-6">
